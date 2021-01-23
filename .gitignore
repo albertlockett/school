@@ -1,5 +1,6 @@
 .DS_STORE
 *.swp
+*.code-workspace
 .RData
 .Rhistory
 .Rproj.user
