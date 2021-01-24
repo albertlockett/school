@@ -1,0 +1,219 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{multirow,array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+
+
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{JavaScript}{
+  keywords={const, let, break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`,
+  ndkeywords={class, export, boolean, throw, implements, import, this, console},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  sensitive=true
+}
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\lstset{framextopmargin=50pt,frame=bottomline}
+
+\usepackage{graphicx}
+\graphicspath{ {./} }
+
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,bindingoffset=10mm, top=22mm,bottom=30mm, footskip=10mm}
+\setlength{\parindent}{0pt}
+\setlength{\headsep}{0.5in}
+
+
+\linespread{1.3}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{
+  STAT 3093 Assignment \#2 \\
+  Albert Lockett, 3254354, \href{mailto:k44if@unb.ca}{\texttt{k44if@unb.ca}}
+}
+\rfoot{Page \thepage / \pageref{LastPage}\\}
+
+\begin{document}
+\title{STAT 3093 Assignment \#2}
+\author{
+  Albert Lockett \\ 
+  3254354, 
+  \href{mailto:me@somewhere.com}{\texttt{k44if@unb.ca}}
+  }
+\date{01/22/2021}
+
+\section*{Problem 1}
+
+\begin{table}[htbp]
+  \begin{tabularx}{\textwidth}{cccc}
+    {\bf $s_1$} & {\bf $s_2$} & {\bf $\bar{X}$} & {\bf $S$} \\ \hline
+    0 & 0 &     0      & 0      \\ 
+    0 & 1 &    0.5     & 0.7071 \\ 
+    0 & 2 &     1      & 1.4142 \\ 
+    1 & 0 &    0.5     & 0.7071 \\ 
+    1 & 1 &     1      & 0      \\ 
+    1 & 2 &    1.5     & 0.7071 \\ 
+    2 & 0 &     1      & 1.4142 \\ 
+    2 & 1 &    1.5     & 0.7071 \\ 
+    2 & 2 &     2      & 0          
+  \end{tabularx}
+\end{table}
+
+\subsection*{1.1)}
+
+\begin{table}[htbp]
+  \begin{tabularx}{\textwidth}{cc}
+    {\bf $\bar{X}$} & Probability \\ \hline
+    0 & 1/9 \\ 
+    0.5 & 2/9 \\
+    1 &  3/9 \\
+    1.5 & 2/9 \\
+    2 & 1/ 9\\
+  \end{tabularx}
+\end{table}
+
+\subsection*{1.2)}
+
+\begin{table}[htbp]
+  \begin{tabularx}{\textwidth}{cc}
+    {\bf $S$} & Probability \\ \hline
+    0 & 3/9 \\ 
+    $\sqrt{0.5}$ = 0.7071 & 2/9 \\
+    $\sqrt{2}$ = 1.4142 &  3/9 \\
+  \end{tabularx}
+\end{table}
+
+\clearpage
+
+calculations were performed using computer \footnote[1]{JavaScript with ECMAScript 2020 (ES11) features.}
+\begin{lstlisting}[language=JavaScript]
+
+const mean = sample => 
+  sample.reduce((a, b) => a+b, 0) / sample.length
+
+const stdev = (sample, sm=mean(sample)) =>
+  Math.sqrt(sample.reduce((a, b) => a + Math.pow(b - sm, 2), 0))
+
+const means = {}
+const stdevs = {}
+let samples = []
+
+for (let i of [0, 1, 2]) {
+  for (let j of [0, 1, 2]) {
+    let sample = [i, j]
+    sampleMean = mean(sample)
+    sampleStdev = stdev(sample)
+    
+    means[sampleMean] = 1 + (means[sampleMean] ?? 0)
+    stdevs[sampleStdev] = 1 + (stdevs[sampleStdev] ?? 0)
+    samples = [...samples, {i, j, sampleMean, sampleStdev }]
+  }
+}
+
+console.table(samples)
+console.table(
+  Object.keys(means).sort()
+    .reduce((acc, x) => [ 
+      ...acc, { x, probabilty: `${means[x]}/${samples.length}` }], []))
+console.table(
+  Object.keys(stdevs).sort()
+    .reduce((acc, x) => [ 
+      ...acc, { x, probabilty: `${stdevs[x]}/${samples.length}` }], []))
+\end{lstlisting}
+
+\clearpage
+
+\section*{Problem 2}
+
+Exercise 14a on page 305. \\
+
+The approximate probability that the professor has finished grading before the 11:00pm news is 0.6026.\\
+
+The time the professor spent grading is 250 minutes.
+
+\[ 6:50 + 10 mins = 7:00 \]
+\[ 11:00 - 7:00  = 4 hours \]
+\[ 4h x \cdot 60\frac{mins}{hour} = 240 mins \]
+\[ 10 mins + 240 mins = 250 mins \]
+
+Accoring to Central Limit Theorum
+
+\[ \lim_{n \rightarrow \infty} P\left(\frac{T_0 - n \mu}{\sqrt{n} \sigma} \le z \right) = \Phi(z) \]
+
+\vspace{1cm}
+$n$ is large enough, according to rule of thumb
+\[ n = 40 > 30\]
+
+The values from the problem into the formula
+\[ \frac{T_0 - n \mu}{\sqrt{n} \mu} = \frac{250 mins - 40 \cdot 6 mins }{\sqrt{40} \cdot 6 mins} = 0.2635 \]
+
+\vspace{1cm}
+The value from table A.3  on page 789 the textbook is used
+\[ \Phi(0.2635) = 0.6026\]
+
+\clearpage
+
+\section*{Problem 3}
+
+Exercise 18ac on page 305.
+
+\subsection*{a)}
+
+The approximate probability that the amount purchased is at least 12 gallons is 0.8106
+
+\[ \lim_{n \rightarrow \infty} P\left(\frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \le z \right) = \Phi(z)\]
+
+\[ P\left(\frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \le z \right) = P\left(\frac{12 - 11.5}{4 / \sqrt{50}} \le z \right) P(0.8838 \le z) =  \Phi(z)\]
+
+\[\Phi(0.8838) = 0.8106 \]
+
+\subsection*{c)}
+
+The 95th percentile for the total amount purchased by 50 randomly selected customers is approximately 622 gallons.
+
+\[ \frac{T_0 - n \mu}{\sqrt{n} \sigma} \le z\]
+
+\[ T_0 \le z \sqrt{n} \sigma +  n \mu \]
+
+\vspace{5mm}
+According to table A.3 in the textbook: $ \Phi(.95) \approxeq 1.65 $
+
+
+\[ T_0 \le 1.65 \sqrt{50} \cdot 4 +  50 \cdot 11.5 = 621.6690 \]
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
