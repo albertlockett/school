@@ -25,16 +25,16 @@
   morestring=[b]',
   morestring=[b]",
   morestring=[b]`,
-  ndkeywords={class, export, boolean, throw, implements, import, this, console},
+  ndkeywords={class, export, boolean, throw, implements, import, this, console, Math, Object},
   keywordstyle=\color{blue}\bfseries,
-  ndkeywordstyle=\color{darkgray}\bfseries,
+  ndkeywordstyle=\color{magenta}\bfseries,
   identifierstyle=\color{black},
   commentstyle=\color{purple}\ttfamily,
-  stringstyle=\color{red}\ttfamily,
+  stringstyle=\color{teal}\ttfamily,
   sensitive=true
 }
 \lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
-\lstset{framextopmargin=50pt,frame=bottomline}
+\lstset{framextopmargin=50pt}
 
 \usepackage{graphicx}
 \graphicspath{ {./} }
@@ -100,8 +100,8 @@
   \begin{tabularx}{\textwidth}{cc}
     {\bf $S$} & Probability \\ \hline
     0 & 3/9 \\ 
-    $\sqrt{0.5}$ = 0.7071 & 2/9 \\
-    $\sqrt{2}$ = 1.4142 &  3/9 \\
+    $\sqrt{0.5}$ = 0.7071 & 4/9 \\
+    $\sqrt{2}$ = 1.4142 &  2/9 \\
   \end{tabularx}
 \end{table}
 
@@ -109,12 +109,11 @@
 
 calculations were performed using computer \footnote[1]{JavaScript with ECMAScript 2020 (ES11) features.}
 \begin{lstlisting}[language=JavaScript]
-
-const mean = sample => 
-  sample.reduce((a, b) => a+b, 0) / sample.length
-
-const stdev = (sample, sm=mean(sample)) =>
-  Math.sqrt(sample.reduce((a, b) => a + Math.pow(b - sm, 2), 0))
+const mean = sample => sample.reduce((a, b) => a+b, 0) / sample.length
+const variance = (sample, sm=mean(sample)) => {
+  return sample.reduce((a, b) => a + Math.pow(b - sm, 2), 0)
+}
+const stdev = sample => Math.sqrt(variance(sample))
 
 const means = {}
 const stdevs = {}
@@ -200,8 +199,81 @@ The 95th percentile for the total amount purchased by 50 randomly selected custo
 \vspace{5mm}
 According to table A.3 in the textbook: $ \Phi(.95) \approxeq 1.65 $
 
-
 \[ T_0 \le 1.65 \sqrt{50} \cdot 4 +  50 \cdot 11.5 = 621.6690 \]
+
+\clearpage
+
+\section*{Problem 3}
+
+Exercise 1ab on page 346, but use this subset of data:
+
+\subsection*{a)}
+
+For this point estimate, $\bar{X}$ is used:
+
+\[ \hat{\mu} = \bar{X} = \frac{X_1 + ... + X_n}{n} = 113.7 \]
+
+The estimated standard error is the sample standard deviation divided by $\sqrt{n}$
+
+\[ \hat{\sigma}_{\bar{X}} = \frac{s}{\sqrt{n}} = 13.0 \]
+
+\begin{lstlisting}[language=JavaScript]
+  const IQ = [
+     82,  96, 102, 103, 106, 107, 108, 108, 108, 109, 110, 110, 111, 
+    113, 113, 113, 115, 115, 118, 119, 121, 122, 127, 136, 140, 146,
+  ]
+  const xBar = mean(IQ)
+  const stdErr = stdev(IQ) / Math.sqrt(IQ.length)
+  console.table([{ xBar, stdErr }])
+\end{lstlisting}
+
+\subsection*{b)}
+
+The estimate of the value that separates the lowest 50\% from the highest 50\%, is the sample median.
+
+\[ \hat{m} = \tilde{X} = \frac{113 - 111}{2} = 112\]
+
+\vspace{5mm}
+The estimated standard error determined by bootstrapping method was 2.5
+
+\begin{lstlisting}[language=JavaScript]
+const boostrapSample = sample => {
+  return sample.map(() => {
+    const r = Math.floor(Math.random() * sample.length)
+    return sample[r]
+  })
+}
+
+const B = 200;
+const bootstrapMedians = []
+for (let i = 0; i < B; i++) {
+  bootstrapMedians.push(median(boostrapSample(IQ)))
+}
+const SB = Math.sqrt((1/(B - 1) * variance(bootstrapMedians)))
+console.log(SB)  
+\end{lstlisting}
+
+\clearpage
+
+\section*{Problem 4}
+
+Exercise 8a on page 348.
+
+\subsection*{a)}
+
+The estimate of $p$, the proportion which are not defective
+
+\[ \hat{p} = 1 - \frac{X}{n} = 1 - \frac{12}{80} = 0.85 \]
+
+The estimate standard error
+
+\[ \hat{\sigma}_{\hat{p}} = \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} = \sqrt{\frac{0.85 \cdot 0.15}{80}} = 0.0399\]
+
+\clearpage
+
+\section*{Problem 5}
+
+Exercise 12 on page 348.
 
 \end{document}
 
