@@ -109,11 +109,6 @@
 
 calculations were performed using computer \footnote[1]{JavaScript with ECMAScript 2020 (ES11) features.}
 \begin{lstlisting}[language=JavaScript]
-const mean = sample => sample.reduce((a, b) => a+b, 0) / sample.length
-const variance = (sample, sm=mean(sample)) => {
-  return sample.reduce((a, b) => a + Math.pow(b - sm, 2), 0)
-}
-const stdev = sample => Math.sqrt(variance(sample))
 
 const means = {}
 const stdevs = {}
@@ -203,7 +198,7 @@ According to table A.3 in the textbook: $ \Phi(.95) \approxeq 1.65 $
 
 \clearpage
 
-\section*{Problem 3}
+\section*{Problem 4}
 
 Exercise 1ab on page 346, but use this subset of data:
 
@@ -255,7 +250,7 @@ console.log(SB)
 
 \clearpage
 
-\section*{Problem 4}
+\section*{Problem 5}
 
 Exercise 8a on page 348.
 
@@ -271,9 +266,32 @@ The estimate standard error
 
 \clearpage
 
-\section*{Problem 5}
+\section*{Problem 6}
 
 Exercise 12 on page 348.
+
+
+For an unbiased estimator
+
+\[ E(\hat{\theta}) - \theta = 0 \implies \theta = E(\hat{\theta}) \]
+
+For the estimator in the problem
+
+\[ E(\hat{\sigma^2}) = E\left( \frac{(n_1 - 1)S_1^2 + (n_2 - 1)S_2^2}{n_1 + n_2 - 2} \right) \]
+\[ = \frac{1}{n_1 + n_2 - 2}E\left((n_1 - 1)S_1^2 + (n_2 - 1)S_2^2 \right) \]
+\[ = \frac{1}{n_1 + n_2 - 2} \left(E((n_1 - 1)S_1^2) + E((n_2 - 1)S_2^2) \right) \]
+\[ = \frac{(n_1 - 1)E(S_1^2) + (n_2 - 1)E(S_2^2)}{n_1 + n_2 - 2} \]
+
+\vspace{1cm}
+In example 7.6 of the textbook, it is shown that
+\[ E(S^2) = \sigma^2 \]
+
+In the problem it states both types of fertilizer have the same variance
+\[ E(S_1^2) = E(S_2^2) = \sigma^2 \]
+
+\vspace{5mm}
+Substitute into above to show the estimate is unbiased
+\[ E(\hat{\sigma^2}) = \frac{(n_1 - 1)\sigma^2 + (n_2 - 1)\sigma^2}{n_1 + n_2 - 2} = \frac{(n_1 - 1 + n_2 - 1)\sigma^2}{n_1 + n_2 - 2} = \frac{(n_1 + n_2 - 2)\sigma^2}{n_1 + n_2 - 2} = \sigma^2 \]
 
 \end{document}
 
