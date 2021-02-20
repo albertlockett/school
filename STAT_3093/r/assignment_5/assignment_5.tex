@@ -1,0 +1,306 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{multirow,array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+
+
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{JavaScript}{
+  keywords={const, let, break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`,
+  ndkeywords={class, export, boolean, throw, implements, import, this, console, Math, Object},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{magenta}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{teal}\ttfamily,
+  sensitive=true
+}
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\lstset{framextopmargin=50pt}
+
+\usepackage{graphicx}
+\graphicspath{ {./} }
+
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,bindingoffset=10mm, top=22mm,bottom=30mm, footskip=10mm}
+\setlength{\parindent}{0pt}
+\setlength{\headsep}{0.5in}
+
+
+\linespread{1.3}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{
+  STAT 3093 Assignment \#5 \\
+  Albert Lockett, 3254354, \href{mailto:k44if@unb.ca}{\texttt{k44if@unb.ca}}
+}
+\rfoot{Page \thepage / \pageref{LastPage}\\}
+
+\begin{document}
+\title{STAT 3093 Assignment \#5}
+\author{
+  Albert Lockett \\ 
+  3254354, 
+  \href{mailto:k44if@unb.ca}{\texttt{k44if@unb.ca}}
+  }
+\date{14/02/2021}
+
+\section*{Problem 1}
+\textit{Exercise 46 on page 411.}\newline
+
+The 99\% confidence interval for the standard deviation is:\newline
+
+Lower limit:
+\[ 
+  \sqrt{\frac{(n - 1)s^2}{\chi^2_{\alpha/2,n-1}}} =
+  \sqrt{\frac{(19 -1) 7.234}{38.58}} =
+  \textbf{\Large{1.887}}
+\]
+
+\vspace{5mm}
+Upper limit:
+\[
+  \sqrt{\frac{(n - 1)s^2}{\chi^2_{1-\alpha/2,n-1}}} =
+  \sqrt{\frac{(19 -1) 7.234}{6.844}} =
+  \textbf{\Large{4.481}}
+\]
+
+\vspace{5mm}
+This confidence interval is \textbf{not valid} whatever the nature of the distribution. 
+It is only valid for the normal distribution. The formula used to compute the interval relies
+on the fact that the distribution of a squred normal distribution is a chi-squared distribution
+(from page 315 of textbook).
+
+\vspace{1cm}
+\underline{Calculations:}
+\vspace{2mm}
+\begin{lstlisting}[language=R]
+alpha <- 0.01
+vals <- c(
+  19.75, 21.25, 21.5, 22.50, 23.25, 23.5, 24.00, 24, 24.25, 
+  24.5,  25.00, 26.0, 26.25, 26.25, 27.0, 27.75, 28, 28.00, 
+  28.25, 30
+)
+n <- length(vals)
+s2 <- var(vals)
+
+chi_high <- qchisq(alpha/2, df=n-1)
+chi_low  <- qchisq(1 - alpha/2, df=n-1)
+
+lower <- (n-1)*s2/chi_low
+upper <- (n-1)*s2/chi_high
+
+lower_s <- sqrt(lower) # lower limit
+upper_s <- sqrt(upper) # upper limit
+\end{lstlisting}
+
+\clearpage
+
+\section*{Problem 2}
+\textit{Exercise 8 on page 435.}\newline
+
+The null hypothesis $H_0$ is that the average warpage of the special laminate $\mu_s$ will be equal to
+the warpage of the regular laminage $\mu_r$.\\
+\[ H_0: \hspace{5mm} \mu_s = \mu_r \]
+
+\vspace{8mm}
+The alternative hypothesis $H_a$ is that the warpage of the special laminate $\mu_s$ is less than the 
+warpage of the regular laminate $\mu_r$.
+\[ H_a: \hspace{5mm} \mu_s < \mu_r \]
+
+\vspace{8mm}
+A \textbf{type I error} in this context would be determining that the average warpage of the special
+laminate is less than the average warpage of the regular laminate when it really is not.\newline
+
+A \textbf {type II error} in this context would be determining that the average warpage of the special
+laminate is not less than the warpage of the regular laminate when it really is.
+
+\clearpage
+
+\section*{Problem 3}
+\textit{Exercise 12a, b, c on page 436.} 
+
+\subsection*{a)}
+The parameter of iterest $\mu$ is the real average breaking distance at 40mph using the new design.\newline
+
+\[ H_0 : \hspace{5mm} \mu = 120 \text{ feet} \]
+
+\[ H_a: \hspace{5mm} \mu < 120 \text{ feet} \]
+
+
+\subsection*{b)}
+
+The appropriate regection region is \textbf{$R_2$}. 
+We want to reject the only if there is a reduction in braking distance so the regection region should 
+be lower tailed.
+
+\subsection*{c)}
+
+The signifigance level is:
+\[
+  \alpha =
+  \Phi\left(\frac{\bar{x} - \mu}{\sigma/\sqrt{n}}\right) =
+  \Phi\left(\frac{115.20 - 120}{10/\sqrt{36}}\right) = 
+  \textbf{\Large{1.9884$\times$10$^{\textbf{-3}}$}}
+\]
+
+
+\vspace{1cm}
+To acheive $\alpha = 0.001$:
+
+\[\Phi(z) = 0.001 \implies z = -3.090 \]
+
+\[
+z = \frac{\bar{x} - \mu}{\sigma/\sqrt{n}} \implies
+\bar{x} = \frac{z\sigma}{\sqrt{n}} + \mu
+\]
+
+\[
+\bar{x} = \frac{-3.090 \cdot 10}{\sqrt{36}} = \textbf{\Large{114.85}}
+\]
+
+\underline{Calculations:}
+\begin{lstlisting}[language=R]
+  sigma <- 10;
+  n <- 36;
+  mu <- 120;
+  x <- 115.20;
+  z <- (115.20 - 120) / (sigma/sqrt(n))
+  alpha <-pnorm(z)
+  z2 <- qnorm(0.001)
+  x2 <- z2 * sigma / sqrt(n) + mu
+\end{lstlisting}
+\clearpage
+
+
+\section*{Problem 4}
+\textit{Exercise 28 on page 449.} \newline
+
+The data suggests the true average lateral recumebcy time is less than 
+20 mins.\newline
+
+Hypotheses
+\[ H_0 : \hspace{5mm} \mu = \mu_0 = 20 \text{ mins}\]
+\[ H_a : \hspace{5mm} \mu < \mu_0\]
+
+Rejection region
+\[ z \le -z_{\alpha}\]
+\[ -z_{\alpha} = -z_{0.1} = -1.28\]\newline
+
+Test statistic
+\[ 
+  z = 
+  \frac{\bar{x} - \mu_0}{s/\sqrt{n}} =
+  \frac{18.6 - 20}{8.6/\sqrt{73}} =
+  -1.39
+\]\newline
+
+\Large{The null hypothesis should be rejected}
+\[
+ -1.39 < -1.28 \implies z < -z_{\alpha}
+\]\newline
+
+\large
+
+\underline{Calculations:}
+\begin{lstlisting}[language=R]
+  n <- 73;
+  x_bar <- 18.6;
+  S <- 8.6;
+  mu_0 <- 20;
+  alpha <- 0.1;
+  z_alpha <- qnorm(0.1)
+  z <- (x_bar - mu_0)/(S/sqrt(n))
+  reject_h0 <- z < z_alpha # TRUE
+\end{lstlisting}
+\clearpage
+
+\section*{Problem 5}
+\textit{Exercise 32a on page 449.}
+
+\subsection*{a)}
+
+The data does suggest the population mean differs from 100 using
+$\alpha = 0.05$\newline
+
+Hypotheses
+\[ H_0 : \hspace{5mm} \mu = \mu_0 \]
+\[ H_a : \hspace{5mm} \mu \neq \mu_0 \]\newline
+
+Rejection region
+\[ 
+  t \ge t_{\alpha/2,n-1} 
+  \hspace{5mm}\text{or}\hspace{5mm} 
+  t \le -t_{\alpha/2,n-1}
+\]
+\[ t_{\alpha/2,n-1} = t_{0.05/2,12-1} = 2.201 \]\newline
+
+Test statistic
+\[ 
+  t = 
+  \frac{\bar{x} - \mu_0}{s/\sqrt{n}} =
+  \frac{98.46 - 100}{6.142/\sqrt{12}} =
+  -0.870
+\]\newline
+
+\Large{The null hypothesis should \textbf{not} be rejected}
+\[
+  -2.201 < -0.870 < 2.201 \implies
+  -t_{\alpha/2,n-1} < t < t_{\alpha/2,n-1}
+\]\newline
+\large
+
+\clearpage
+\underline{Calculations:}
+\begin{lstlisting}[language=R]
+  data <- c(
+    105.6,  90.9, 91.2,  96.9,  96.5, 91.3,
+    101.1, 105.0, 99.6, 107.7, 103.3, 92.4
+  );
+  
+  # calcuate test statistic value
+  n <- length(data);
+  x_bar <- mean(data);
+  s <- sqrt(var(data));
+  mu_0 <- 100;
+  t <- (x_bar - mu_0)/(s/sqrt(n))
+  
+  # calculate rejection region
+  alpha <- 0.05;
+  t_alpha <- qt(alpha/2, n-1, lower.tail=FALSE)
+  
+  # check whether should reject
+  reject_h0 <- t > t_alpha || t < -1*t_alpha # <- FALSE
+\end{lstlisting}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
