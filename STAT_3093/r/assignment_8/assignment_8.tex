@@ -1,0 +1,238 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{multirow,array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+
+
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{JavaScript}{
+  keywords={const, let, break, case, catch, continue, debugger, default, delete, do, else, false, finally, for, function, if, in, instanceof, new, null, return, switch, this, throw, true, try, typeof, var, void, while, with},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  morestring=[b]`,
+  ndkeywords={class, export, boolean, throw, implements, import, this, console, Math, Object},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{magenta}\bfseries,
+  identifierstyle=\color{black},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{teal}\ttfamily,
+  sensitive=true
+}
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
+\lstset{framextopmargin=50pt}
+
+\usepackage{graphicx}
+\graphicspath{ {./} }
+
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,bindingoffset=10mm, top=22mm,bottom=30mm, footskip=10mm}
+\setlength{\parindent}{0pt}
+\setlength{\headsep}{0.5in}
+
+
+\linespread{1.3}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{
+  STAT 3093 Assignment \#8 \\
+  Albert Lockett, 3254354, \href{mailto:k44if@unb.ca}{\texttt{k44if@unb.ca}}
+}
+\rfoot{Page \thepage / \pageref{LastPage}\\}
+
+\begin{document}
+\title{STAT 3093 Assignment \#8}
+\author{
+  Albert Lockett \\ 
+  3254354, 
+  \href{mailto:k44if@unb.ca}{\texttt{k44if@unb.ca}}
+  }
+\date{19/03/2021}
+
+\section*{Q1}
+\textit{Exercise 64 on page 531.}\newline
+
+Low dose gains:\\ $s_1 = 54$g, $m = 23$ 
+
+Control gains:\\ $s_2 = 32$g, $n = 20$\newline
+
+
+Test statistic:\\ $f = \frac{s_1^2}{s_2^2} = \frac{54^2}{32^2} = 2.848$\newline
+
+Hypotheses:\\
+$H_0: \sigma_1^2 = \sigma_2^2$\\
+$H_\text{a}: \sigma_1^2 > \sigma_2^2$ (low dose variability > control variability)\newline
+
+Rejection Region:\\
+$f \ge F_{\alpha,m-1,n-1}$\newline
+
+$F_{\alpha,23-1,20-1} = 0.4799 < f$\newline
+
+The test statistic f is in the rejection region so the null hypothesis, which states that the variability of the
+control gains equals the variability of the low dose gains, can be rejected at the significance level $\alpha = 0.05$.
+
+\pagebreak
+
+\section*{Q2}
+\textit{Exercise 66 on page 532.}\newline
+
+Epoxy\\ 
+$s_1^2 = 0.02576$\\
+$s_1 = 0.1605$\\ 
+$m = 4$\newline
+
+MMA prepolymer\\
+$s_2^2\ = 0.005491$\\
+$s_2 = 0.07411$\\
+$n = 4$\newline
+
+For 90\% confidence interval: $\alpha = 0.10$\newline
+
+Conidence Interval\\
+
+\[ \left(  
+  \frac{s_1}{s_2} \cdot \frac{1}{\sqrt{F_{\alpha/2,m-1,n-1}}} ,  
+  \frac{s_1}{s_2} \cdot \sqrt{F_{\alpha/2,m-1,n-1}} ,
+\right) \]\newline
+
+\[ \left(  
+  \frac{0.1605}{0.07411} \cdot \frac{1}{\sqrt{F_{0.05,3,3}}} ,  
+  \frac{0.1605}{0.07411} \cdot \sqrt{F_{0.05,3,3}} ,
+\right) \]\newline
+
+\[(0.2335, 20.09)\]
+
+\pagebreak
+
+\section*{Q3}
+\textit{Exercise 6 on page 564.}\newline
+
+\begin{center}
+  \begin{tabular}{ c c c c c }
+    \hline
+    \textbf{Source}  & \textbf{df} & \textbf{Sum of squares} & \textbf{Mean square}   & \textbf{$f$} \\ 
+    \hline
+    Brand            & $I - 1$     & SSTr                    & MSTr = SSTr/$(I - 1)$  & MSTr / MSE \\  
+    Error            & $I(J - 1)$  & SSE                     & MSE = SSE/[$I(J - 1)$] \\
+    Total            & $IJ - 1$    & SST \\
+    \hline
+  \end{tabular}
+\end{center}
+
+MSE = 14,713.69 \\
+SST = 310,500.76 \newline
+
+Four brands are sparkplugs are tested $\implies I = 4$\newline
+Five of each brand are tested $\implies J = 5$
+\[
+  \text{MSE} = \frac{\text{SSE}}{I(J - 1)} 
+  \implies
+  \text{SSE} = \text{MSE}[I(J - 1)] = 14,713.69 \cdot 4 (5 - 1) = 235,419.04
+\]
+
+\[
+  \text{SST} = \text{SSTr} + \text{SSE}
+  \implies 
+  \text{SSTr} = \text{SST} - \text{SSE} = 75,081.72 
+\]
+
+\[\text{MSTr} = \frac{\text{SSTr}}{I-1} = \frac{75,081.72}{4 - 1} = 25,027.24 \]
+
+\[f = \frac{MSTr}{MSE} = \frac{25,027.24}{14,713.69} = 1.7009\]
+
+\vspace{1cm}
+
+\begin{center}
+  \begin{tabular}{ c c c c c }
+    \hline
+    \textbf{Source}  & \textbf{df}  & \textbf{Sum of squares} & \textbf{Mean square}  & \textbf{$f$} \\ 
+    \hline
+    Brand            & $3$          & 75,081.72               & 25,027.24             & 1.7009 \\  
+    Error            & $16$         & 235,419.04              & 14,713.69 \\
+    Total            & $19$         & 310,500.76 \\
+    \hline
+  \end{tabular}
+\end{center}
+\vspace{1cm}
+
+The null hypothesis is that all the spark plugs have the same mean performance, the alternative is that they are
+not all the same
+
+$H_0: \mu_1 = \mu_2 = \mu_3 = \mu_4 $\\
+$H_\text{a}: \text{at least two of the $\mu_i$'s are different}$
+
+P value for a signficance level of $\alpha = 0.01$ is $F_{\alpha,I-1,I(J-1) = F_{0.01,3,16}} = 5.2922$\\
+
+$f > F_{0.01,3,16}$ so reject the null hypotheiss at this signifigance level.
+
+\section*{Q5}
+\textit{Exercise 18 on page 571.}
+
+\subsection*{a)}
+
+code:
+\begin{lstlisting}[language=R]
+  m1 <- c(13, 17,  7, 14);     h1 <- rep("1", length(m1));
+  m2 <- c(21, 13, 20, 17);     h2 <- rep("2", length(m2));
+  m3 <- c(18, 15, 20, 17);     h3 <- rep("3", length(m3));
+  m4 <- c( 7, 11, 18, 10);     h4 <- rep("4", length(m4));
+  m5 <- c( 6, 11, 15,  8);     h5 <- rep("5", length(m5));
+  
+  measure <- c(d1, d2, d3, d4, d5)
+  hormone <- c(h1, h2, h3, h4, h5)
+  
+  vals <- data.frame(measure, hormone)
+  
+  anova_result <- anova(lm(measure~ hormone, data=vals))
+  print(anova_result)
+\end{lstlisting}
+\vspace{0.5cm}
+
+
+output:
+\begin{lstlisting}[language=R]
+  Response: measure
+            Df Sum Sq Mean Sq F value  Pr(>F)  
+  hormone    4  200.3  50.075  3.4855 0.03336
+  Residuals 15  215.5  14.367     
+\end{lstlisting}
+\vspace{0.5cm}
+
+The F value is 3.4855 which which gives a P value of 0.03336, so the null hypothesis can be rejected.
+
+\subsection*{b)}
+
+$\bar{x}_1$ = 12.75\\
+$\bar{x}_2$ = 17.75\\
+$\bar{x}_3$ = 17.5\\
+$\bar{x}_4$ = 11.5\\
+$\bar{x}_5$ = 10\\
+
+$w = Q_{\alpha,I,I(J-1)} = Q_{0.05,5,5\cdot(4-1)} \sqrt{14.367 / 4} = 8.276$
+
+\end{document}
+
+
+
+
+
+q
+
+
+
+
